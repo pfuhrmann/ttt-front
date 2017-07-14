@@ -10,6 +10,8 @@
     "url": "https://patrikfuhrmann.com"
   },
   "dependencies": {
+    "jquery": "^3.2.1",
+    "jsdom": "^11.1.0",
     "tone": "^0.6.0"
   },
   "devDependencies": {

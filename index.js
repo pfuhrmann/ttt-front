@@ -1,25 +1,26 @@
-/*
-  This is a bare-bones, no-bullshit
-  example of using browserify + npm.
- */
+var $ = require("jquery");
 
-// Our third-party dependency from npm
-var Tone = require('tone');
+$('div.cell').on('click', onCellClick);
 
-// An example of ToneJS
-var synth = new Tone.SimpleSynth().toMaster();
+function onCellClick() {
+    var cell = $(this);
+    var position = getCellLocation(cell);
 
-// Setup events
-window.addEventListener('touchstart', beep);
-window.addEventListener('mousedown', beep);
+    console.log(position[0] + ' x ' + position[1]);
 
-function beep (ev) {
-    ev.preventDefault()
-    synth.triggerAttackRelease('C4', '8n');
+    placeX(cell);
 }
 
-// You can also use built-in Node modules
-var url = require('url');
+function getCellLocation(cell) {
+    var $posA =  cell.parent().index() + 1;
+    var $posB = cell.index() + 1;
 
-// e.g.
-console.log(url.parse(window.location.href));
+    return [$posA, $posB]
+}
+
+function placeX(cell) {
+    if (!cell.html()) {
+        var img = $("<img />",{"src":'images/ttt-x.png'});
+        cell.html(img);
+    }
+}

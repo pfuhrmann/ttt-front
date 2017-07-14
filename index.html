@@ -3,11 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, minimum-scale=1.0">
-    <title>browserify-example</title>
+    <title>Tic-tact-toe</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<div>click anywhere to beep. (Requires WebAudio)</div>
+
+<h1>Tic-tac-toe</h1>
+
+<div id="showgrid">
+    <p class="tutorial">Start by placing X on the board</p>
+    <div class="row">
+        <div class="cell"></div>
+        <div class="cell v"></div>
+        <div class="cell"></div>
+    </div>
+    <div class="row">
+        <div class="cell h"></div>
+        <div class="cell v h"></div>
+        <div class="cell h"></div>
+    </div>
+    <div class="row">
+        <div class="cell"></div>
+        <div class="cell v"></div>
+        <div class="cell"></div>
+    </div>
+</div>
+
 <script src="bundle.js"></script>
 </body>
 </html>
