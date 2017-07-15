@@ -8,7 +8,7 @@ h1 {
     padding-bottom: 50px;
 }
 
-@media screen and (min-device-width:400px) {
+@media screen and (min-device-width: 400px) {
     div#showgrid {
         width: 400px;
         margin: auto;
@@ -40,14 +40,14 @@ div.cell img {
     margin: auto;
 }
 
-.v{
-    border-left:2px solid #000;
-    border-right:2px solid #000;
+.v {
+    border-left: 2px solid #000;
+    border-right: 2px solid #000;
 }
 
-.h{
-    border-top:2px solid #000;
-    border-bottom:2px solid #000;
+.h {
+    border-top: 2px solid #000;
+    border-bottom: 2px solid #000;
 }
 
 .tutorial {
@@ -55,7 +55,7 @@ div.cell img {
     padding-bottom: 50px;
 }
 
-#board {
+#spinner {
     text-align: center;
 }
 
@@ -63,7 +63,7 @@ div.cell img {
     display: inline-block;
     margin-top: 100px;
     border: 2px solid #f3f3f3; /* Light grey */
-    border-top:  2px solid black; /* Blue */
+    border-top: 2px solid black; /* Blue */
     border-radius: 50%;
     width: 25px;
     height: 25px;
@@ -71,6 +71,10 @@ div.cell img {
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
 }

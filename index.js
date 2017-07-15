@@ -3,9 +3,10 @@
 var $ = require('jquery');
 var axios = require('axios');
 
+// Dispaly spinner on load
 var spinner = $('<div class="loader"></div>');
 window.onload = function() {
-    $('#board').html(spinner);
+    $('#spinner').html(spinner);
 };
 
 $(function () {
@@ -13,7 +14,7 @@ $(function () {
     const IMG_O = 'ttt-o.png';
 
     // Get the position and place the players image
-    function onCellClick() {
+    function onMove() {
         var cell = $(this);
         var position = getCellLocation(cell);
 
@@ -59,16 +60,17 @@ $(function () {
     // Generate board based on the layout
     function drawBoard(layout) {
         var board = $('#board');
+        var boardNew = board.clone();
 
         for (var i = 0; i < layout.length; i++) {
             var rows = layout[i];
-            var rowEl = $('<div class="row"></div>').appendTo(board);
+            var rowEl = $('<div class="row"></div>').appendTo(boardNew);
 
             for (var j = 0; j < rows.length; j++) {
                 var column = rows[j];
                 var cell = $('<div class="cell"></div>')
                     .appendTo(rowEl)
-                    .on('click', onCellClick);
+                    .on('click', onMove);
 
                 if (j !== 0 && j !== rows.length - 1) {
                     cell.addClass('v');
@@ -81,14 +83,15 @@ $(function () {
                 appendImage(column.type, cell);
             }
         }
+
+        board.replaceWith(boardNew);
     }
-    
+
     // Initiate new board layout by calling API
     function initBoard() {
         axios.get('http://localhost:8888/api/init')
             .then(function (response) {
-                var layout = response.data.layout;
-                drawBoard(layout);
+                drawBoard(response.data.layout);
                 spinner.hide();
 
             })
