@@ -12,7 +12,9 @@ window.onload = function () {
 $(function () {
     // Initiate new gaming board
     function initBoard() {
-        new board.Board;
+        new board.Board('http://localhost:8888/api/', function () {
+            spinner.hide();
+        });
     }
 
     initBoard();

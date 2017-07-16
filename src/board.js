@@ -8,6 +8,14 @@ const IMG_O = 'ttt-o.png';
 const CELL_EMPTY = 0;
 
 exports.Board = class Board {
+    constructor(backendApiUrl, callback) {
+        this.board = $('#board');
+        this.message = $('#message');
+        this.api = new api.ApiClient(backendApiUrl);
+        this.initBoard(callback);
+        this.initResetBtn();
+    }
+
     // Return position coordinates of the cell
     static getCellLocation(cell) {
         let posA = cell.parent().index();
@@ -15,6 +23,7 @@ exports.Board = class Board {
 
         return [posA, posB]
     }
+
 
     // Insert new image into the cell
     static placeImage(cell, img) {
@@ -41,20 +50,33 @@ exports.Board = class Board {
         }
     }
 
-    constructor() {
-        this.spinner = $('#spinner');
-        this.board = $('#board');
-        this.api = new api.ApiClient('http://localhost:8888/api/');
-        this.initBoard();
+    // Returns message about status for the UI
+    static getUserMessage(status) {
+        if (!status) {
+            return 'Start by placing X on the board';
+        }
+
+        switch (status[0].state) {
+            case 'win':
+                return 'Plate ' + Board.getWinner(status[1].winner) + ' WON !!!';
+            case 'draw':
+                return 'It is DRAW !!!';
+            case 'ongoing':
+                return 'Your turn ...';
+        }
+    }
+
+    // Returns name based on the winner number
+    static getWinner(winner) {
+        return (winner === 1) ? 'X' : 'O';
     }
 
     // Initialize board
-    initBoard() {
+    initBoard(callback) {
         let that = this;
         this.api.init(function (response) {
-            that.layout = response.data.layout;
-            that.renderBoard(that.layout);
-            that.spinner.hide();
+            callback();
+            that.updateBoard(response);
         });
     }
 
@@ -90,6 +112,7 @@ exports.Board = class Board {
     onMove(cell) {
         let position = Board.getCellLocation(cell);
         if (this.layout[position[0]][[position[1]]].type !== CELL_EMPTY) {
+            // Prevent any action if cell is empty
             return;
         }
 
@@ -98,9 +121,16 @@ exports.Board = class Board {
         Board.placeImage(cell, IMG_X);
 
         this.api.move(position, this.layout, 'clueless', function (response) {
-            that.layout = response.data.layout;
-            that.renderBoard(that.layout);
+            that.updateBoard(response);
         });
+    }
+
+    // Initiate reset button
+    initResetBtn() {
+        let that = this;
+        $('#reset').on('click', function () {
+            that.initBoard();
+        }).show();
     }
 
     // Create new cell element
@@ -110,5 +140,16 @@ exports.Board = class Board {
             .on('click', function () {
                 that.onMove($(this));
             });
+    }
+
+    updateBoard(response) {
+        this.layout = response.data.layout;
+        this.renderBoard(this.layout);
+        this.setMessage(Board.getUserMessage(response.data.status));
+    }
+
+    // Send UI message to the user
+    setMessage(text) {
+        this.message.html(text);
     }
 };

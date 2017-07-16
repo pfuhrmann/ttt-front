@@ -50,14 +50,18 @@ div.cell img {
     border-bottom: 2px solid #000;
 }
 
-.tutorial {
+#message {
     padding-bottom: 30px;
     color: darkred;
     font: 20px bold verdana;
 }
 
+#spinner {
+    padding-top: 30px;
+}
+
 #showgrid button {
-    display: inline-block;;
+    display: none;
     margin-bottom: 30px;
 }
 
