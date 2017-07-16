@@ -2,7 +2,6 @@
 
 let $ = require('jquery');
 let api = require('./api');
-api = new api.ApiClient('http://localhost:8888/api/');
 
 const IMG_X = 'ttt-x.png';
 const IMG_O = 'ttt-o.png';
@@ -11,6 +10,7 @@ exports.Board = class Board {
     constructor() {
         this.spinner = $('#spinner');
         this.board = $('#board');
+        this.api = new api.ApiClient('http://localhost:8888/api/');
         this.initBoard();
     }
 
@@ -33,7 +33,7 @@ exports.Board = class Board {
     // Initialize board
     initBoard(callback) {
         let that = this;
-        api.init(function (response) {
+        this.api.init(function (response) {
             console.log(response);
             that.layout = response.data.layout;
             that.renderBoard(that.layout);
@@ -82,7 +82,7 @@ exports.Board = class Board {
         // Speeding up perception of placement however replaced later
         Board.placeImage(cell, IMG_X);
         console.log(position[0] + ' x ' + position[1]);
-        api.move(position, layout, function (response) {
+        this.api.move(position, layout, function (response) {
             that.layout = response.data.layout;
             that.renderBoard(layout);
         });

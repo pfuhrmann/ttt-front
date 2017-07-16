@@ -1,18 +1,18 @@
 "use strict";
 
-let $ = require('jquery');
-let board = require('./src/board');
+import $ from 'jquery';
+import board from './src/board';
 
 // Display initial loading spinner
 let spinner = $('<div class="loader"></div>');
-window.onload = function() {
+window.onload = function () {
     $('#spinner').html(spinner);
 };
 
 $(function () {
     // Initiate new gaming board
     function initBoard() {
-        board = new board.Board;
+        new board.Board;
     }
 
     initBoard();

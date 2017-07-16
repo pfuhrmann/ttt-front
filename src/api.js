@@ -1,6 +1,6 @@
 "use strict";
 
-let axios = require('axios');
+import axios from 'axios';
 
 exports.ApiClient = class ApiClient {
     constructor(baseUri) {
