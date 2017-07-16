@@ -93,7 +93,7 @@ exports.Board = class Board {
         // Speeding up perception of placement however replaced later
         Board.placeImage(cell, IMG_X);
 
-        this.api.move(position, this.layout, function (response) {
+        this.api.move(position, this.layout, 'clueless', function (response) {
             that.layout = response.data.layout;
             that.renderBoard(that.layout);
         });

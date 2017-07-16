@@ -17,10 +17,11 @@ exports.ApiClient = class ApiClient {
     }
 
     // Make a move
-    move(position, layout, callback) {
+    move(position, layout, botName, callback) {
         axios.post(this.url('move'), {
                 position: position,
-                layout: layout
+                layout: layout,
+                botName: botName
             })
             .then(callback)
             .catch(function (error) {
