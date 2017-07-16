@@ -1,20 +1,13 @@
 "use strict";
 
-let $ = require('jquery');
-let api = require('./api');
+import $ from 'jquery';
+import api from './api';
 
 const IMG_X = 'ttt-x.png';
 const IMG_O = 'ttt-o.png';
 
 exports.Board = class Board {
-    constructor() {
-        this.spinner = $('#spinner');
-        this.board = $('#board');
-        this.api = new api.ApiClient('http://localhost:8888/api/');
-        this.initBoard();
-    }
-
-    // Ex. [0,2] is top right corner
+    // Return position coordinates of the cell
     static getCellLocation(cell) {
         let posA = cell.parent().index();
         let posB = cell.index();
@@ -30,6 +23,30 @@ exports.Board = class Board {
         }
     }
 
+    // Append image to the cell based on the cell type
+    // layout: 0 => empty cell
+    //         1 => player X
+    //         2 => player O
+    static appendImage(cellType, cell) {
+        switch (cellType) {
+            case 0:
+                break;
+            case 1:
+                Board.placeImage(cell, IMG_X);
+                break;
+            case 2:
+                Board.placeImage(cell, IMG_O);
+                break;
+        }
+    }
+
+    constructor() {
+        this.spinner = $('#spinner');
+        this.board = $('#board');
+        this.api = new api.ApiClient('http://localhost:8888/api/');
+        this.initBoard();
+    }
+
     // Initialize board
     initBoard() {
         let that = this;
@@ -39,8 +56,6 @@ exports.Board = class Board {
             that.spinner.hide();
         });
     }
-
-    // Return position coordinates of the cell
 
     // Generate board based on the layout
     renderBoard(layout) {
@@ -53,12 +68,7 @@ exports.Board = class Board {
 
             for (let j = 0; j < rows.length; j++) {
                 let column = rows[j];
-                let that = this;
-                let cell = $('<div class="cell"></div>')
-                    .appendTo(rowEl)
-                    .on('click', function() {
-                        that.onMove($(this));
-                    });
+                let cell = this.createCell().appendTo(rowEl);
 
                 if (j !== 0 && j !== rows.length - 1) {
                     cell.addClass('v');
@@ -75,6 +85,7 @@ exports.Board = class Board {
         this.board.html(boardNew);
     }
 
+    // On the move
     onMove(cell) {
         let position = Board.getCellLocation(cell);
         let that = this;
@@ -88,21 +99,12 @@ exports.Board = class Board {
         });
     }
 
-    // Append image to the cell based on the cell type
-    // layout: 0 => empty cell
-    //         1 => player X
-
-    //         2 => player O
-    static appendImage(cellType, cell) {
-        switch (cellType) {
-            case 0:
-                break;
-            case 1:
-                Board.placeImage(cell, IMG_X);
-                break;
-            case 2:
-                Board.placeImage(cell, IMG_O);
-                break;
-        }
+    // Create new cell element
+    createCell() {
+        let that = this;
+        return $('<div class="cell"></div>')
+            .on('click', function () {
+                that.onMove($(this));
+            });
     }
 };
