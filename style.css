@@ -5,7 +5,7 @@ body {
 h1 {
     text-align: center;
     font: 28px verdana;
-    padding-bottom: 50px;
+    padding-bottom: 20px;
 }
 
 @media screen and (min-device-width: 400px) {
@@ -15,9 +15,6 @@ h1 {
     }
 }
 
-div#showgrid {
-
-}
 
 @media (min-device-width: 400px) {
     .cell {
@@ -28,11 +25,14 @@ div#showgrid {
     }
 }
 
+#showgrid {
+    text-align:center;
+}
+
 div.cell img {
     max-height: 75px;
     max-width: 75px;
     margin-top: 25px;
-    margin-left: 25px;
 }
 
 .row {
@@ -51,12 +51,14 @@ div.cell img {
 }
 
 .tutorial {
-    text-align: center;
-    padding-bottom: 50px;
+    padding-bottom: 30px;
+    color: darkred;
+    font: 20px bold verdana;
 }
 
-#spinner {
-    text-align: center;
+#showgrid button {
+    display: inline-block;;
+    margin-bottom: 30px;
 }
 
 .loader {
@@ -77,4 +79,14 @@ div.cell img {
     100% {
         transform: rotate(360deg);
     }
+}
+
+.btn {
+    background-color: #555555; /* Green */
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
 }

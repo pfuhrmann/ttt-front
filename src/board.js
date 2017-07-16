@@ -5,6 +5,7 @@ import api from './api';
 
 const IMG_X = 'ttt-x.png';
 const IMG_O = 'ttt-o.png';
+const CELL_EMPTY = 0;
 
 exports.Board = class Board {
     // Return position coordinates of the cell
@@ -88,8 +89,11 @@ exports.Board = class Board {
     // On the move
     onMove(cell) {
         let position = Board.getCellLocation(cell);
-        let that = this;
+        if (this.layout[position[0]][[position[1]]].type !== CELL_EMPTY) {
+            return;
+        }
 
+        let that = this;
         // Speeding up perception of placement however replaced later
         Board.placeImage(cell, IMG_X);
 
