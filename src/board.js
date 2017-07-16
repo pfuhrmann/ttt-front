@@ -16,8 +16,8 @@ exports.Board = class Board {
 
     // Ex. [0,2] is top right corner
     static getCellLocation(cell) {
-        let posA = cell.parent().index() + 1;
-        let posB = cell.index() + 1;
+        let posA = cell.parent().index();
+        let posB = cell.index();
 
         return [posA, posB]
     }
@@ -31,10 +31,9 @@ exports.Board = class Board {
     }
 
     // Initialize board
-    initBoard(callback) {
+    initBoard() {
         let that = this;
         this.api.init(function (response) {
-            console.log(response);
             that.layout = response.data.layout;
             that.renderBoard(that.layout);
             that.spinner.hide();
@@ -54,9 +53,12 @@ exports.Board = class Board {
 
             for (let j = 0; j < rows.length; j++) {
                 let column = rows[j];
+                let that = this;
                 let cell = $('<div class="cell"></div>')
                     .appendTo(rowEl)
-                    .on('click', this.onMove);
+                    .on('click', function() {
+                        that.onMove($(this));
+                    });
 
                 if (j !== 0 && j !== rows.length - 1) {
                     cell.addClass('v');
@@ -66,25 +68,23 @@ exports.Board = class Board {
                     cell.addClass('h');
                 }
 
-                this.appendImage(column.type, cell);
+                Board.appendImage(column.type, cell);
             }
         }
 
-        this.board.replaceWith(boardNew);
+        this.board.html(boardNew);
     }
 
-    // Get the position and place the players image
-    onMove() {
-        let cell = $(this);
+    onMove(cell) {
         let position = Board.getCellLocation(cell);
         let that = this;
 
         // Speeding up perception of placement however replaced later
         Board.placeImage(cell, IMG_X);
-        console.log(position[0] + ' x ' + position[1]);
-        this.api.move(position, layout, function (response) {
+
+        this.api.move(position, this.layout, function (response) {
             that.layout = response.data.layout;
-            that.renderBoard(layout);
+            that.renderBoard(that.layout);
         });
     }
 
@@ -93,15 +93,15 @@ exports.Board = class Board {
     //         1 => player X
 
     //         2 => player O
-    appendImage(cellType, cell) {
+    static appendImage(cellType, cell) {
         switch (cellType) {
             case 0:
                 break;
             case 1:
-                placeImage(cell, IMG_X);
+                Board.placeImage(cell, IMG_X);
                 break;
             case 2:
-                placeImage(cell, IMG_O);
+                Board.placeImage(cell, IMG_O);
                 break;
         }
     }

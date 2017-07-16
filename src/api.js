@@ -18,7 +18,10 @@ exports.ApiClient = class ApiClient {
 
     // Make a move
     move(position, layout, callback) {
-        axios.post(this.url('move'))
+        axios.post(this.url('move'), {
+                position: position,
+                layout: layout
+            })
             .then(callback)
             .catch(function (error) {
                 console.log(error);
