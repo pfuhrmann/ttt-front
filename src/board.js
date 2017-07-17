@@ -6,12 +6,16 @@ import api from './api';
 const IMG_X = 'ttt-x.png';
 const IMG_O = 'ttt-o.png';
 const CELL_EMPTY = 0;
+const STATE_WIN = 'win';
+const STATE_DRAW = 'draw';
+const STATE_ONGOING = 'ongoing';
 
 exports.Board = class Board {
     constructor(backendApiUrl, callback) {
         this.board = $('#board');
         this.message = $('#message');
         this.api = new api.ApiClient(backendApiUrl);
+        this.gameState = STATE_ONGOING;
         this.initBoard(callback);
         this.initResetBtn();
     }
@@ -51,21 +55,23 @@ exports.Board = class Board {
     }
 
     // Returns message about status for the UI
-    static getUserMessage(status) {
+    getUserMessage(status) {
+        this.gameState = (status) ? status.state : STATE_ONGOING;
+
         if (!status) {
             return 'Start by placing X on the board';
         }
 
-        switch (status[0].state) {
-            case 'win':
-                let winner = status[1].winner;
+        switch (this.gameState) {
+            case STATE_WIN:
+                let winner = status.winner;
                 if (winner === 1) {
-                    return  'You WON :) !!!';
+                    return 'You WON :) !!!';
                 }
-                return  'You LOST :( !!!';
-            case 'draw':
+                return 'You LOST :( !!!';
+            case STATE_DRAW:
                 return 'It is DRAW !!!';
-            case 'ongoing':
+            case STATE_ONGOING:
                 return 'Your turn ...';
         }
     }
@@ -82,7 +88,8 @@ exports.Board = class Board {
     }
 
     // Generate board based on the layout
-    renderBoard(layout) {
+    renderBoard() {
+        let layout = this.layout;
         // Cloning to eventually replace for smoother UI
         let boardNew = this.board.clone().empty();
 
@@ -112,15 +119,14 @@ exports.Board = class Board {
     // On the move
     onMove(cell) {
         let position = Board.getCellLocation(cell);
-        if (this.layout[position[0]][[position[1]]].type !== CELL_EMPTY) {
-            // Prevent any action if cell is empty
-            return;
-        }
+        // Prevent any action if cell is empty or game ended
+        if (this.layout[position[0]][[position[1]]].type !== CELL_EMPTY) return;
+        if (this.gameEnded()) return;
 
-        let that = this;
         // Speeding up perception of placement however replaced later
         Board.placeImage(cell, IMG_X);
 
+        let that = this;
         this.api.move(position, this.layout, 'clueless', function (response) {
             that.updateBoard(response);
         });
@@ -145,12 +151,16 @@ exports.Board = class Board {
 
     updateBoard(response) {
         this.layout = response.data.layout;
-        this.renderBoard(this.layout);
-        this.setMessage(Board.getUserMessage(response.data.status));
+        this.renderBoard();
+        this.setMessage(this.getUserMessage(response.data.status));
     }
 
     // Send UI message to the user
     setMessage(text) {
         this.message.html(text);
+    }
+
+    gameEnded() {
+        return this.gameState === STATE_WIN || this.gameState === STATE_DRAW
     }
 };

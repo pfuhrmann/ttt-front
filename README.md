@@ -18,6 +18,7 @@ Run in development mode
 npm run start
 ```
 
+## Building
 Build for the production and serve by the webserver
 ```
 npm run build
