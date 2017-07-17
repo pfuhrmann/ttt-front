@@ -58,7 +58,11 @@ exports.Board = class Board {
 
         switch (status[0].state) {
             case 'win':
-                return 'Plate ' + Board.getWinner(status[1].winner) + ' WON !!!';
+                let winner = status[1].winner;
+                if (winner === 1) {
+                    return  'You WON :) !!!';
+                }
+                return  'You LOST :( !!!';
             case 'draw':
                 return 'It is DRAW !!!';
             case 'ongoing':
@@ -66,17 +70,14 @@ exports.Board = class Board {
         }
     }
 
-    // Returns name based on the winner number
-    static getWinner(winner) {
-        return (winner === 1) ? 'X' : 'O';
-    }
-
     // Initialize board
     initBoard(callback) {
         let that = this;
         this.api.init(function (response) {
-            callback();
             that.updateBoard(response);
+            if (callback) {
+                callback();
+            }
         });
     }
 
