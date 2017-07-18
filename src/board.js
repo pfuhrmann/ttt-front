@@ -127,7 +127,7 @@ exports.Board = class Board {
         Board.placeImage(cell, IMG_X);
 
         let that = this;
-        this.api.move(position, this.layout, 'clueless', function (response) {
+        this.api.move(position, this.layout, 'unbeatable', function (response) {
             that.updateBoard(response);
         });
     }
